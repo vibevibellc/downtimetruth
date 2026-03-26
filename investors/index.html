@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DowntimeTruth | Investor Deck</title>
+  <meta
+    name="description"
+    content="DowntimeTruth is building agent-based uptime verification that catches what status pages and crowd-sourced outage trackers miss."
+  />
+  <link rel="icon" href="../favicon.ico" type="image/x-icon" />
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap");
+
+    :root {
+      --bg: #050505;
+      --panel: rgba(14, 14, 16, 0.88);
+      --panel-border: rgba(255, 255, 255, 0.08);
+      --text-main: #f5f5f7;
+      --text-dim: #a1a1aa;
+      --text-soft: #71717a;
+      --accent: #22c55e;
+      --accent-soft: rgba(34, 197, 94, 0.18);
+      --warning: #f59e0b;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+      --radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Inter", system-ui, sans-serif;
+      color: var(--text-main);
+      background:
+        radial-gradient(circle at top left, rgba(34, 197, 94, 0.12), transparent 32%),
+        radial-gradient(circle at 85% 10%, rgba(245, 158, 11, 0.1), transparent 28%),
+        linear-gradient(180deg, #050505 0%, #09090b 100%);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(circle at center, black, transparent 78%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .glow {
+      position: fixed;
+      inset: auto;
+      width: 42rem;
+      height: 42rem;
+      border-radius: 50%;
+      filter: blur(110px);
+      opacity: 0.28;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .glow-left {
+      top: -10rem;
+      left: -10rem;
+      background: rgba(34, 197, 94, 0.28);
+    }
+
+    .glow-right {
+      right: -8rem;
+      bottom: 12rem;
+      background: rgba(245, 158, 11, 0.16);
+    }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px 20px 72px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-main);
+      text-decoration: none;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(34, 197, 94, 0.2));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: var(--shadow);
+      font-family: "Space Grotesk", sans-serif;
+      font-weight: 700;
+    }
+
+    .top-links {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .top-links a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.95rem;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      transition: 0.2s ease;
+    }
+
+    .top-links a:hover {
+      color: var(--text-main);
+      border-color: rgba(34, 197, 94, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(280px, 0.7fr);
+      gap: 24px;
+      align-items: stretch;
+      margin-bottom: 24px;
+    }
+
+    .hero-card,
+    .panel,
+    .metric-card {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(20px);
+    }
+
+    .hero-card {
+      padding: 36px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -10% -35% auto;
+      width: 20rem;
+      height: 20rem;
+      background: radial-gradient(circle, rgba(34, 197, 94, 0.22), transparent 70%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: #facc15;
+      font-size: 0.76rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .eyebrow-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #facc15;
+      box-shadow: 0 0 12px rgba(250, 204, 21, 0.9);
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      font-family: "Space Grotesk", sans-serif;
+      letter-spacing: -0.03em;
+    }
+
+    h1 {
+      font-size: clamp(3rem, 6vw, 5.8rem);
+      line-height: 0.92;
+      margin-bottom: 20px;
+      max-width: 9ch;
+    }
+
+    .hero-card p {
+      margin: 0;
+      max-width: 58ch;
+      font-size: 1.08rem;
+      line-height: 1.75;
+      color: var(--text-dim);
+    }
+
+    .hero-card strong,
+    .panel strong {
+      color: var(--text-main);
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 18px;
+      border-radius: 14px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: 0.2s ease;
+      border: 1px solid transparent;
+    }
+
+    .button-primary {
+      color: #050505;
+      background: var(--accent);
+      box-shadow: 0 14px 30px rgba(34, 197, 94, 0.22);
+    }
+
+    .button-secondary {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.03);
+    }
+
+    .hero-side {
+      display: grid;
+      gap: 16px;
+    }
+
+    .metric-card {
+      padding: 24px;
+    }
+
+    .metric-label {
+      color: var(--text-soft);
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .metric-value {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 1.7rem;
+      line-height: 1.05;
+      margin-bottom: 10px;
+    }
+
+    .metric-copy {
+      color: var(--text-dim);
+      font-size: 0.97rem;
+      line-height: 1.65;
+      margin: 0;
+    }
+
+    .deck-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .panel {
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(34, 197, 94, 0.8), rgba(245, 158, 11, 0.2));
+    }
+
+    .span-4 { grid-column: span 4; }
+    .span-5 { grid-column: span 5; }
+    .span-6 { grid-column: span 6; }
+    .span-7 { grid-column: span 7; }
+    .span-8 { grid-column: span 8; }
+    .span-12 { grid-column: span 12; }
+
+    .kicker {
+      color: var(--accent);
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .panel h2 {
+      font-size: 2rem;
+      margin-bottom: 14px;
+    }
+
+    .panel p {
+      margin: 0;
+      color: var(--text-dim);
+      line-height: 1.72;
+      font-size: 1rem;
+    }
+
+    .panel ul {
+      list-style: none;
+      padding: 0;
+      margin: 18px 0 0;
+      display: grid;
+      gap: 12px;
+    }
+
+    .panel li {
+      position: relative;
+      padding-left: 18px;
+      color: var(--text-dim);
+      line-height: 1.65;
+    }
+
+    .panel li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.74em;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 14px rgba(34, 197, 94, 0.45);
+    }
+
+    .quote {
+      margin-top: 20px;
+      padding: 18px 20px;
+      border-left: 3px solid rgba(34, 197, 94, 0.65);
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 18px;
+      color: var(--text-main);
+      font-size: 1.02rem;
+      line-height: 1.7;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .pill {
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      font-size: 0.92rem;
+    }
+
+    .thesis-list {
+      display: grid;
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .thesis-item {
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .thesis-item h3 {
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+    }
+
+    .thesis-item p {
+      font-size: 0.96rem;
+    }
+
+    .footer-note {
+      margin-top: 22px;
+      color: var(--text-soft);
+      font-size: 0.92rem;
+      line-height: 1.65;
+      text-align: center;
+    }
+
+    code {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.92em;
+      padding: 0.15em 0.4em;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.07);
+      color: #d4d4d8;
+    }
+
+    @media (max-width: 960px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .span-4,
+      .span-5,
+      .span-6,
+      .span-7,
+      .span-8 {
+        grid-column: span 12;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .shell {
+        padding: 18px 14px 56px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .hero-card,
+      .panel,
+      .metric-card {
+        padding: 22px;
+        border-radius: 20px;
+      }
+
+      h1 {
+        max-width: none;
+      }
+
+      .hero-actions,
+      .top-links {
+        width: 100%;
+      }
+
+      .button,
+      .top-links a {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="glow glow-left"></div>
+  <div class="glow glow-right"></div>
+
+  <main class="shell">
+    <div class="topbar">
+      <a class="brand" href="../index.html">
+        <span class="brand-mark">DT</span>
+        <span>DowntimeTruth</span>
+      </a>
+
+      <div class="top-links">
+        <a href="../index.html">Home</a>
+        <a href="#deck">Deck</a>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSd_FPaY-qYsxDCn2TPD5Pw9t30ZAM7J3xHs3MnIgJ0LGROZVw/viewform" target="_blank" rel="noreferrer">Contact</a>
+      </div>
+    </div>
+
+    <section class="hero">
+      <div class="hero-card">
+        <div class="eyebrow">
+          <span class="eyebrow-dot"></span>
+          Investor Deck / 2026
+        </div>
+        <h1>Downtime truth beats status theater.</h1>
+        <p>
+          DowntimeTruth is building <strong>agent-based uptime verification</strong> for a market full of stale status pages,
+          shallow polling, and noisy crowd-sourced trackers. We behave like real users, verify real breakage,
+          and give software teams a lightweight path from <code>/health</code> checks to full critical-flow monitoring.
+        </p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="https://docs.google.com/forms/d/e/1FAIpQLSd_FPaY-qYsxDCn2TPD5Pw9t30ZAM7J3xHs3MnIgJ0LGROZVw/viewform" target="_blank" rel="noreferrer">Talk to the founder</a>
+          <a class="button button-secondary" href="#ask">Why this wins</a>
+        </div>
+      </div>
+
+      <div class="hero-side">
+        <div class="metric-card">
+          <div class="metric-label">Core insight</div>
+          <div class="metric-value">Production breaks faster than dashboards update.</div>
+          <p class="metric-copy">
+            Teams ship constantly. Regressions hit user flows first. Official status pages often become a lagging indicator.
+          </p>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-label">Product wedge</div>
+          <div class="metric-value">Agent journeys plus <code>/health</code> fallback.</div>
+          <p class="metric-copy">
+            Start simple with server uptime. Graduate into full synthetic user verification as soon as the business needs it.
+          </p>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-label">Business posture</div>
+          <div class="metric-value">Free until failure.</div>
+          <p class="metric-copy">
+            The positioning is memorable, the onboarding friction is low, and the pricing is aligned with actual pain.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="deck-grid" id="deck">
+      <article class="panel span-7">
+        <div class="kicker">Problem</div>
+        <h2>The internet has an uptime truth gap.</h2>
+        <p>
+          Production software is becoming more brittle at the exact moment teams are shipping faster than ever. Status pages are often PR artifacts.
+          Third-party outage sites lean on weak probes or community chatter. Operators end up trapped between under-reporting and misinformation.
+        </p>
+        <ul>
+          <li>Status pages usually update after support tickets pile up.</li>
+          <li>Crowd-sourced outage trackers are noisy, delayed, and easy to game.</li>
+          <li>Conventional uptime checks miss broken sign-in, checkout, search, and AI workflows.</li>
+        </ul>
+      </article>
+
+      <article class="panel span-5">
+        <div class="kicker">Thesis</div>
+        <h2>Reliability needs verification, not vibes.</h2>
+        <div class="thesis-list">
+          <div class="thesis-item">
+            <h3>Observe like a user</h3>
+            <p>Agents click, submit, log in, and move through key flows instead of checking a single port.</p>
+          </div>
+          <div class="thesis-item">
+            <h3>Stay lightweight</h3>
+            <p>Smaller teams can start with a single <code>/health</code> endpoint for basic server uptime.</p>
+          </div>
+          <div class="thesis-item">
+            <h3>Align incentives</h3>
+            <p>Monitoring should become more serious when the failure becomes expensive.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel span-4">
+        <div class="kicker">Product</div>
+        <h2>Three layers of truth.</h2>
+        <ul>
+          <li><strong>Health checks:</strong> ping <code>/health</code> for basic availability.</li>
+          <li><strong>Agent flows:</strong> crawl and test what real users actually do.</li>
+          <li><strong>Failure receipts:</strong> preserve evidence about where the flow broke.</li>
+        </ul>
+      </article>
+
+      <article class="panel span-4">
+        <div class="kicker">Why Now</div>
+        <h2>AI-native shipping changes the failure curve.</h2>
+        <p>
+          Vibe-coded products, tiny engineering teams, and faster deployment loops mean more product surface area can break without anyone noticing immediately.
+          Reliability is no longer a back-office concern. It is growth, trust, and retention.
+        </p>
+        <div class="pill-row">
+          <span class="pill">AI-assisted releases</span>
+          <span class="pill">Lean ops teams</span>
+          <span class="pill">Critical user flows</span>
+        </div>
+      </article>
+
+      <article class="panel span-4">
+        <div class="kicker">Who Needs This</div>
+        <h2>The first customers are obvious.</h2>
+        <ul>
+          <li>AI products with fragile multi-step workflows.</li>
+          <li>SaaS teams that cannot afford silent regressions.</li>
+          <li>Ecommerce and transactional software where broken funnels equal immediate revenue loss.</li>
+        </ul>
+      </article>
+
+      <article class="panel span-6">
+        <div class="kicker">Business Model</div>
+        <h2>Low-friction adoption, sharp economic alignment.</h2>
+        <p>
+          DowntimeTruth is positioned to spread easily because the entry point is simple and the promise is memorable. Baseline monitoring can be free or close to free.
+          Higher-value workflows, verified failures, escalation context, and accountability become the paid layer. This keeps acquisition lightweight and makes pricing legible.
+        </p>
+        <div class="quote">
+          Customers do not want another observability dashboard. They want to know whether the thing that makes money is actually working.
+        </div>
+      </article>
+
+      <article class="panel span-6" id="ask">
+        <div class="kicker">Why We Win</div>
+        <h2>A contrarian brand with a compounding dataset.</h2>
+        <ul>
+          <li>Every monitored flow teaches the system how modern products actually fail in production.</li>
+          <li>Agent orchestration creates a harder-to-copy product edge than plain uptime polling.</li>
+          <li>The brand is blunt in a category full of polite but unhelpful infrastructure software.</li>
+          <li>This is designed for conviction investors who like infrastructure, AI leverage, and sharp product positioning.</li>
+        </ul>
+      </article>
+
+      <article class="panel span-12">
+        <div class="kicker">The Ask</div>
+        <h2>We are looking for aligned investors, not tourist capital.</h2>
+        <p>
+          DowntimeTruth fits investors who believe software infrastructure should verify reality instead of echoing official narratives.
+          If you like first-principles bets, opinionated product strategy, AI systems doing real operational work, and pricing that customers remember,
+          this is the kind of company worth leaning into early.
+        </p>
+        <div class="pill-row">
+          <span class="pill">Infrastructure software</span>
+          <span class="pill">AI agents with a job to do</span>
+          <span class="pill">Reliability as revenue protection</span>
+          <span class="pill">Category-defining positioning</span>
+        </div>
+        <p class="footer-note">
+          This page is intentionally concise. It is a live investor overview, not a PDF pretending to be momentum.
+        </p>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
