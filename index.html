@@ -2,1043 +2,223 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DowntimeTruth | Free Monitoring. Brutal Accountability.</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DowntimeTruth | Free Monitoring. Costly Failure.</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@700&display=swap');
 
     :root {
-      --bg: #04110f;
-      --bg-deep: #020706;
-      --panel: rgba(8, 24, 21, 0.72);
-      --panel-strong: rgba(7, 20, 18, 0.92);
-      --line: rgba(168, 255, 217, 0.14);
-      --line-strong: rgba(168, 255, 217, 0.28);
-      --text: #effcf6;
-      --muted: #9eb6ab;
-      --green: #73f0a6;
-      --green-strong: #32cf7d;
-      --gold: #f4bb54;
-      --orange: #ff7a45;
-      --danger: #ff6855;
-      --shadow: 0 30px 80px rgba(0, 0, 0, 0.42);
-      --radius-xl: 32px;
-      --radius-lg: 24px;
-      --radius-md: 18px;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
+      --bg: #050505;
+      --accent: #22c55e;
+      --accent-glow: rgba(34, 197, 94, 0.2);
+      --text-main: #f5f5f7;
+      --text-dim: #a1a1aa;
     }
 
     body {
       margin: 0;
-      font-family: 'Manrope', sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at 15% 15%, rgba(115, 240, 166, 0.14), transparent 28%),
-        radial-gradient(circle at 85% 12%, rgba(244, 187, 84, 0.16), transparent 22%),
-        radial-gradient(circle at 50% 110%, rgba(50, 207, 125, 0.2), transparent 34%),
-        linear-gradient(180deg, #081816 0%, #04110f 46%, var(--bg-deep) 100%);
-      overflow-x: hidden;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
       min-height: 100vh;
-      position: relative;
-    }
-
-    body::before,
-    body::after {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    body::before {
-      background-image:
-        linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-      background-size: 64px 64px;
-      mask-image: radial-gradient(circle at center, black, transparent 82%);
-      opacity: 0.28;
-    }
-
-    body::after {
-      background:
-        repeating-linear-gradient(
-          180deg,
-          rgba(255, 255, 255, 0.035),
-          rgba(255, 255, 255, 0.035) 1px,
-          transparent 1px,
-          transparent 7px
-        );
-      opacity: 0.08;
-      mix-blend-mode: soft-light;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .orb,
-    .beam {
-      position: fixed;
-      border-radius: 999px;
-      filter: blur(18px);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .orb {
-      width: 340px;
-      height: 340px;
-      background: radial-gradient(circle, rgba(115, 240, 166, 0.18), transparent 70%);
-      top: 8%;
-      left: -4%;
-      animation: drift 16s ease-in-out infinite alternate;
-    }
-
-    .orb.orb-2 {
-      width: 420px;
-      height: 420px;
-      background: radial-gradient(circle, rgba(255, 122, 69, 0.14), transparent 72%);
-      top: 54%;
-      right: -10%;
-      left: auto;
-      animation-duration: 20s;
-    }
-
-    .beam {
-      width: 55vw;
-      height: 12px;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
-      top: 22%;
-      left: 20%;
-      transform: rotate(-12deg);
-      opacity: 0.3;
-      animation: sweep 12s ease-in-out infinite;
-    }
-
-    .page-shell {
-      position: relative;
-      z-index: 1;
-      width: min(1180px, calc(100% - 40px));
-      margin: 0 auto;
-      padding: 24px 0 80px;
-    }
-
-    .reveal {
-      opacity: 0;
-      transform: translateY(24px);
-      animation: rise 0.9s cubic-bezier(.2, .7, .2, 1) forwards;
-      animation-delay: var(--delay, 0s);
-    }
-
-    .site-header {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      gap: 20px;
-      padding: 6px 0 34px;
-    }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.02rem;
-      font-weight: 700;
-      letter-spacing: -0.04em;
-    }
-
-    .brand-mark {
-      width: 16px;
-      height: 16px;
-      border-radius: 4px;
-      background: linear-gradient(135deg, var(--gold), var(--green));
-      box-shadow: 0 0 24px rgba(115, 240, 166, 0.38);
-      transform: rotate(12deg);
-    }
-
-    .header-link {
-      display: inline-flex;
-      align-items: center;
       justify-content: center;
-      padding: 12px 18px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--muted);
-      font-size: 0.92rem;
-      transition: transform 0.25s ease, border-color 0.25s ease, color 0.25s ease;
-      backdrop-filter: blur(14px);
+      text-align: center;
+      overflow: hidden;
+      position: relative;
     }
 
-    .header-link:hover {
-      transform: translateY(-2px);
-      border-color: var(--line-strong);
-      color: var(--text);
+    /* Animated Background Elements */
+    .bg-visuals {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      overflow: hidden;
     }
 
-    .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1.12fr) minmax(320px, 0.88fr);
-      gap: 32px;
-      align-items: stretch;
+    .bg-grid {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      mask-image: radial-gradient(circle at center, black, transparent 80%);
     }
 
-    .hero-copy {
-      padding: 18px 0;
+    .radial-glow {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60vw;
+      height: 60vw;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      filter: blur(80px);
+      opacity: 0.5;
+      animation: pulse 8s infinite alternate;
     }
 
-    .eyebrow {
+    @keyframes pulse {
+      0% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+      100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.1); }
+    }
+
+    .container {
+      max-width: 700px;
+      padding: 40px 24px;
+      z-index: 10;
+      position: relative;
+    }
+
+    .badge {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      padding: 10px 16px;
-      margin-bottom: 26px;
-      border-radius: 999px;
-      border: 1px solid rgba(244, 187, 84, 0.2);
-      background: rgba(244, 187, 84, 0.08);
-      color: #ffd78d;
-      font-size: 0.8rem;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #eab308;
+      font-size: 0.7rem;
       font-weight: 700;
-      letter-spacing: 0.14em;
+      padding: 6px 14px;
+      border-radius: 100px;
+      letter-spacing: 1px;
+      margin-bottom: 24px;
       text-transform: uppercase;
     }
 
-    .eyebrow::before {
-      content: "";
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: currentColor;
-      box-shadow: 0 0 0 0 rgba(255, 215, 141, 0.45);
-      animation: ping 2s infinite;
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      background: #eab308;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #eab308;
     }
 
     h1 {
-      margin: 0;
       font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(3.6rem, 8vw, 6.8rem);
-      line-height: 0.92;
-      letter-spacing: -0.065em;
-      max-width: 9ch;
+      font-size: clamp(3rem, 10vw, 5rem);
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      margin: 0 0 24px 0;
     }
 
-    h1 .accent {
-      display: block;
-      color: var(--green);
-      text-shadow: 0 0 32px rgba(115, 240, 166, 0.18);
-    }
-
-    .lead {
-      max-width: 38rem;
-      margin: 26px 0 0;
-      font-size: clamp(1.08rem, 2.4vw, 1.3rem);
-      line-height: 1.75;
-      color: var(--muted);
-    }
-
-    .lead strong {
-      color: var(--text);
-    }
-
-    .cta-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      margin: 34px 0 28px;
-    }
-
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 16px 24px;
-      border-radius: 18px;
-      font-size: 1rem;
-      font-weight: 800;
-      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, color 0.25s ease;
-    }
-
-    .button-primary {
-      color: #170d06;
-      background: linear-gradient(135deg, var(--gold), var(--orange));
-      box-shadow: 0 22px 40px rgba(255, 122, 69, 0.22);
-    }
-
-    .button-secondary {
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--line);
-      backdrop-filter: blur(14px);
-    }
-
-    .button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 26px 48px rgba(0, 0, 0, 0.25);
-    }
-
-    .button-secondary:hover {
-      border-color: var(--line-strong);
-    }
-
-    .microproof {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .microproof span {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--muted);
-      font-size: 0.9rem;
-      backdrop-filter: blur(10px);
-    }
-
-    .microproof span::before {
-      content: "+";
-      color: var(--green);
-      font-size: 1rem;
-    }
-
-    .hero-panel {
-      display: grid;
-      gap: 18px;
-    }
-
-    .panel {
+    .highlight {
+      color: var(--accent);
       position: relative;
+    }
+
+    .tagline {
+      font-size: clamp(1.1rem, 4vw, 1.4rem);
+      line-height: 1.5;
+      color: var(--text-dim);
+      margin-bottom: 48px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .tagline strong {
+      color: var(--text-main);
+      border-bottom: 2px solid var(--accent);
+    }
+
+    .cta {
+      position: relative;
+      display: inline-block;
+      padding: 20px 48px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #000;
+      background: var(--accent);
+      border-radius: 12px;
+      text-decoration: none;
+      transition: all 0.2s ease;
       overflow: hidden;
-      border-radius: var(--radius-xl);
-      border: 1px solid var(--line);
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
-        var(--panel);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(18px);
     }
 
-    .signal-card {
-      padding: 24px;
+    .cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px -10px var(--accent);
+      filter: brightness(1.1);
     }
 
-    .signal-card::before {
+    .cta:active { transform: translateY(0); }
+
+    /* Shimmer effect on button */
+    .cta::after {
       content: "";
       position: absolute;
-      inset: auto -20% 68% 22%;
-      height: 140px;
-      background: radial-gradient(circle, rgba(115, 240, 166, 0.18), transparent 70%);
-      filter: blur(30px);
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+      transform: rotate(45deg);
+      transition: 0.5s;
+      animation: shimmer 3s infinite;
     }
 
-    .panel-top {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      color: var(--muted);
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
+    @keyframes shimmer {
+      0% { transform: translateX(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) rotate(45deg); }
     }
 
-    .panel-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .live-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 999px;
-      background: var(--green);
-      box-shadow: 0 0 0 0 rgba(115, 240, 166, 0.44);
-      animation: ping 2s infinite;
-    }
-
-    .status-live {
-      color: var(--green);
-    }
-
-    .scoreboard {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin: 24px 0;
-    }
-
-    .score {
-      padding: 16px;
-      border-radius: 22px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      background: rgba(255, 255, 255, 0.035);
-    }
-
-    .score strong {
-      display: block;
-      margin-bottom: 6px;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.45rem;
-      letter-spacing: -0.05em;
-    }
-
-    .score span {
-      display: block;
-      color: var(--muted);
-      font-size: 0.87rem;
-      line-height: 1.45;
-    }
-
-    .terminal {
-      display: grid;
-      gap: 12px;
-      padding: 18px;
-      border-radius: 24px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      background: rgba(1, 7, 6, 0.74);
-    }
-
-    .terminal-line {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 12px;
-      align-items: start;
-      color: var(--muted);
-      font-size: 0.94rem;
-      line-height: 1.55;
-    }
-
-    .terminal-badge {
-      min-width: 68px;
-      padding: 6px 8px;
-      border-radius: 999px;
-      text-align: center;
-      font-size: 0.7rem;
-      font-weight: 800;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: #06120f;
-      background: var(--green);
-    }
-
-    .terminal-badge.warn {
-      background: var(--danger);
-    }
-
-    .terminal-badge.subtle {
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .quote-card {
-      padding: 22px 24px;
-      display: grid;
-      gap: 12px;
-      border-radius: var(--radius-lg);
-    }
-
-    .quote-card p {
-      margin: 0;
-      font-size: 1.05rem;
-      line-height: 1.7;
-    }
-
-    .quote-card span {
-      color: var(--muted);
-      font-size: 0.85rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .ticker {
-      margin: 54px 0 34px;
-      overflow: hidden;
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.035);
-      backdrop-filter: blur(12px);
-    }
-
-    .ticker-track {
-      display: flex;
-      gap: 34px;
-      width: max-content;
-      padding: 14px 0;
-      color: rgba(239, 252, 246, 0.82);
-      font-size: 0.76rem;
-      font-weight: 800;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      animation: ticker 20s linear infinite;
-    }
-
-    .section-label {
-      margin: 0 0 14px;
-      color: #ffd78d;
-      font-size: 0.82rem;
-      font-weight: 800;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-    }
-
-    .section-title {
-      margin: 0;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(2rem, 4vw, 3rem);
-      line-height: 1.02;
-      letter-spacing: -0.05em;
-      max-width: 14ch;
-    }
-
-    .section-text {
-      margin: 18px 0 0;
-      max-width: 40rem;
-      color: var(--muted);
-      font-size: 1rem;
-      line-height: 1.8;
-    }
-
-    .principles {
-      display: grid;
-      grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
-      gap: 28px;
-      align-items: start;
-      margin-top: 26px;
-    }
-
-    .principles-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px;
-    }
-
-    .principle-card {
-      padding: 24px;
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.04);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(16px);
-    }
-
-    .principle-card strong {
-      display: block;
-      margin-bottom: 14px;
-      font-size: 0.82rem;
-      color: var(--green);
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-    }
-
-    .principle-card h3 {
-      margin: 0 0 12px;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.34rem;
-      letter-spacing: -0.04em;
-    }
-
-    .principle-card p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.95rem;
-      line-height: 1.7;
-    }
-
-    .launch-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
-      margin-top: 26px;
-    }
-
-    .launch-card {
-      padding: 24px;
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--line);
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.02));
-      backdrop-filter: blur(16px);
-    }
-
-    .launch-card h3 {
-      margin: 0 0 12px;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.45rem;
-      letter-spacing: -0.04em;
-    }
-
-    .launch-card p,
-    .launch-card li {
-      color: var(--muted);
-      font-size: 0.97rem;
-      line-height: 1.75;
-    }
-
-    .launch-card ul {
-      margin: 14px 0 0;
-      padding-left: 20px;
-    }
-
-    .launch-card li + li {
-      margin-top: 10px;
-    }
-
-    .apply-section {
-      display: grid;
-      grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
-      gap: 28px;
-      align-items: start;
-      margin-top: 72px;
-    }
-
-    .apply-copy,
-    .form-shell {
-      border-radius: var(--radius-xl);
-      border: 1px solid var(--line);
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.025)),
-        var(--panel-strong);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(18px);
-    }
-
-    .apply-copy {
-      padding: 28px;
-      position: sticky;
-      top: 18px;
-    }
-
-    .apply-copy p {
-      margin: 18px 0 0;
-      color: var(--muted);
-      line-height: 1.8;
-    }
-
-    .apply-points {
-      margin: 24px 0 0;
-      padding: 0;
-      list-style: none;
-      display: grid;
-      gap: 14px;
-    }
-
-    .apply-points li {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 14px;
-      align-items: start;
-      color: var(--muted);
-      line-height: 1.65;
-    }
-
-    .apply-points li span {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 30px;
-      height: 30px;
-      border-radius: 999px;
-      background: rgba(115, 240, 166, 0.12);
-      border: 1px solid rgba(115, 240, 166, 0.16);
-      color: var(--green);
-      font-size: 0.86rem;
-      font-weight: 800;
-    }
-
-    .inline-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 24px;
-    }
-
-    .mini-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      color: var(--text);
-      font-weight: 700;
-      font-size: 0.95rem;
-    }
-
-    .mini-link::after {
-      content: "->";
-      color: var(--green);
-    }
-
-    .form-shell {
-      padding: 16px;
-    }
-
-    .form-frame {
-      width: 100%;
-      min-height: 1120px;
-      border: 0;
-      border-radius: 22px;
-      background: #ffffff;
-      display: block;
+    .subtext {
+      margin-top: 32px;
+      font-size: 0.9rem;
+      color: #52525b;
     }
 
     .footer {
-      margin-top: 42px;
-      padding-top: 18px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      color: rgba(158, 182, 171, 0.85);
-      font-size: 0.8rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
+      position: absolute;
+      bottom: 24px;
+      width: 100%;
+      font-size: 0.75rem;
+      color: #3f3f46;
+      letter-spacing: 0.5px;
     }
 
-    @keyframes rise {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes ping {
-      0% {
-        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.28);
-      }
-      70% {
-        box-shadow: 0 0 0 12px rgba(255, 255, 255, 0);
-      }
-      100% {
-        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
-      }
-    }
-
-    @keyframes ticker {
-      0% {
-        transform: translateX(0);
-      }
-      100% {
-        transform: translateX(-50%);
-      }
-    }
-
-    @keyframes drift {
-      0% {
-        transform: translate3d(0, 0, 0) scale(1);
-      }
-      100% {
-        transform: translate3d(40px, -24px, 0) scale(1.08);
-      }
-    }
-
-    @keyframes sweep {
-      0%, 100% {
-        opacity: 0.15;
-        transform: rotate(-12deg) translateX(0);
-      }
-      50% {
-        opacity: 0.4;
-        transform: rotate(-12deg) translateX(40px);
-      }
-    }
-
-    @media (max-width: 1100px) {
-      .hero,
-      .principles,
-      .apply-section {
-        grid-template-columns: 1fr;
-      }
-
-      .principles-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .apply-copy {
-        position: static;
-      }
-    }
-
-    @media (max-width: 760px) {
-      .page-shell {
-        width: min(100% - 24px, 1180px);
-      }
-
-      .site-header {
-        flex-direction: column;
-        align-items: flex-start;
-        padding-bottom: 24px;
-      }
-
-      h1 {
-        font-size: clamp(3.2rem, 14vw, 4.6rem);
-      }
-
-      .scoreboard,
-      .principles-grid,
-      .launch-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .button,
-      .header-link {
-        width: 100%;
-      }
-
-      .cta-row {
-        flex-direction: column;
-      }
-
-      .form-frame {
-        min-height: 1240px;
-      }
-
-      .footer {
-        letter-spacing: 0.08em;
-      }
+    @media (max-width: 480px) {
+      .container { padding: 20px; }
+      .tagline { margin-bottom: 32px; }
     }
   </style>
 </head>
 <body>
-  <div class="orb"></div>
-  <div class="orb orb-2"></div>
-  <div class="beam"></div>
+  <div class="bg-visuals">
+    <div class="bg-grid"></div>
+    <div class="radial-glow"></div>
+  </div>
 
-  <main class="page-shell">
-    <header class="site-header reveal" style="--delay: 0.05s;">
-      <div class="brand">
-        <span class="brand-mark"></span>
-        DowntimeTruth
-      </div>
-      <a class="header-link" href="#apply">Beta Form Live</a>
-    </header>
+  <div class="container">
+    <div class="badge">
+      <span class="badge-dot"></span>
+      Limited Beta
+    </div>
+    
+    <h1>Downtime<span class="highlight">Truth</span></h1>
+    
+    <p class="tagline">
+      Uptime monitoring with a twist.<br> 
+      It's <strong>free</strong> until your site fails.<br>
+      Then, it gets expensive.
+    </p>
 
-    <section class="hero">
-      <div class="hero-copy reveal" style="--delay: 0.12s;">
-        <div class="eyebrow">Live Launch / Early Access Open</div>
-        <h1>
-          Free monitoring.
-          <span class="accent">Brutal accountability.</span>
-        </h1>
-        <p class="lead">
-          DowntimeTruth watches your site for <strong>free</strong> until it fails.
-          Then the pricing model stops being polite. This is monitoring for teams
-          who want receipts, urgency, and zero tolerance for downtime theater.
-        </p>
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSd_FPaY-qYsxDCn2TPD5Pw9t30ZAM7J3xHs3MnIgJ0LGROZVw/viewform" target="_blank" class="cta">
+      Get the Truth →
+    </a>
 
-        <div class="cta-row">
-          <a class="button button-primary" href="#apply">Join the Beta</a>
-          <a
-            class="button button-secondary"
-            href="https://docs.google.com/forms/d/e/1FAIpQLSd_FPaY-qYsxDCn2TPD5Pw9t30ZAM7J3xHs3MnIgJ0LGROZVw/viewform"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Open the Form
-          </a>
-        </div>
+    <p class="subtext">
+      No monthly subscriptions. No hidden fees.<br>
+      Just accountability as a service.
+    </p>
+  </div>
 
-        <div class="microproof">
-          <span>No subscriptions</span>
-          <span>Penalty-first pricing</span>
-          <span>Beta intake happening now</span>
-        </div>
-      </div>
-
-      <div class="hero-panel reveal" style="--delay: 0.2s;">
-        <article class="panel signal-card">
-          <div class="panel-top">
-            <div class="panel-label">
-              <span class="live-dot"></span>
-              Launch Signal
-            </div>
-            <div class="status-live">Waitlist Accepting Submissions</div>
-          </div>
-
-          <div class="scoreboard">
-            <div class="score">
-              <strong>Free</strong>
-              <span>until reality gets expensive</span>
-            </div>
-            <div class="score">
-              <strong>Loud</strong>
-              <span>when your uptime gets shaky</span>
-            </div>
-            <div class="score">
-              <strong>Sharp</strong>
-              <span>enough to change behavior</span>
-            </div>
-          </div>
-
-          <div class="terminal">
-            <div class="terminal-line">
-              <span class="terminal-badge subtle">Init</span>
-              <span>Target added. Monitoring starts with quiet confidence.</span>
-            </div>
-            <div class="terminal-line">
-              <span class="terminal-badge">Check</span>
-              <span>Everything stays free while your uptime holds the line.</span>
-            </div>
-            <div class="terminal-line">
-              <span class="terminal-badge warn">Fail</span>
-              <span>Outage hits. Pricing suddenly cares as much as you should.</span>
-            </div>
-          </div>
-        </article>
-
-        <article class="panel quote-card">
-          <span>Launch Manifesto</span>
-          <p>
-            Cheap monitoring tools tell you what happened. DowntimeTruth makes sure
-            your team actually feels it.
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <section class="ticker reveal" style="--delay: 0.28s;">
-      <div class="ticker-track">
-        <span>No subscriptions</span>
-        <span>No fake urgency</span>
-        <span>No downtime excuses</span>
-        <span>Monitoring with consequences</span>
-        <span>Built for operators who care</span>
-        <span>No subscriptions</span>
-        <span>No fake urgency</span>
-        <span>No downtime excuses</span>
-        <span>Monitoring with consequences</span>
-        <span>Built for operators who care</span>
-      </div>
-    </section>
-
-    <section class="principles reveal" style="--delay: 0.34s;">
-      <div>
-        <p class="section-label">Why It Hits Hard</p>
-        <h2 class="section-title">A launch page with a point of view, not just another SaaS shrug.</h2>
-        <p class="section-text">
-          This beta is for teams who do not want a sleepy dashboard whispering that
-          something broke three tabs ago. The whole idea is simple: if uptime matters,
-          the incentives should matter too.
-        </p>
-      </div>
-
-      <div class="principles-grid">
-        <article class="principle-card">
-          <strong>01</strong>
-          <h3>Free until reality hits</h3>
-          <p>
-            Get started without monthly drag. The pressure only shows up when your
-            site gives your customers a reason to leave.
-          </p>
-        </article>
-        <article class="principle-card">
-          <strong>02</strong>
-          <h3>Signals over vanity</h3>
-          <p>
-            Less dashboard decoration. More consequences, clarity, and operator-level
-            urgency when uptime starts slipping.
-          </p>
-        </article>
-        <article class="principle-card">
-          <strong>03</strong>
-          <h3>Built for serious teams</h3>
-          <p>
-            Founders, operators, agencies, and anyone who never wants to explain a
-            silent outage again can get in early here.
-          </p>
-        </article>
-      </div>
-    </section>
-
-    <section class="launch-grid reveal" style="--delay: 0.42s;">
-      <article class="launch-card">
-        <h3>The pitch</h3>
-        <p>
-          DowntimeTruth is the opposite of "set it and forget it." It is "set it,
-          respect it, and definitely do not let your site embarrass you in public."
-        </p>
-      </article>
-
-      <article class="launch-card">
-        <h3>What the beta asks for</h3>
-        <ul>
-          <li>Your name and contact info.</li>
-          <li>The URL or URLs you want watched carefully.</li>
-          <li>A little context about your hosting setup.</li>
-        </ul>
-      </article>
-    </section>
-
-    <section class="apply-section reveal" id="apply" style="--delay: 0.5s;">
-      <aside class="apply-copy">
-        <p class="section-label">Apply Now</p>
-        <h2 class="section-title">Put your site on the list. Let the excuses fend for themselves.</h2>
-        <p>
-          The full Google Form is embedded right here so people can join the beta
-          without leaving the launch page. If they prefer, there is also a direct
-          link that opens the form in a new tab.
-        </p>
-
-        <ul class="apply-points">
-          <li>
-            <span>1</span>
-            <div>Tell us who you are and how to reach you.</div>
-          </li>
-          <li>
-            <span>2</span>
-            <div>Drop in the URL or URLs that matter most.</div>
-          </li>
-          <li>
-            <span>3</span>
-            <div>Join the first wave of people trying monitoring with teeth.</div>
-          </li>
-        </ul>
-
-        <div class="inline-actions">
-          <a
-            class="mini-link"
-            href="https://docs.google.com/forms/d/e/1FAIpQLSd_FPaY-qYsxDCn2TPD5Pw9t30ZAM7J3xHs3MnIgJ0LGROZVw/viewform"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Open Form Directly
-          </a>
-        </div>
-      </aside>
-
-      <div class="form-shell">
-        <iframe
-          class="form-frame"
-          src="https://docs.google.com/forms/d/e/1FAIpQLSd_FPaY-qYsxDCn2TPD5Pw9t30ZAM7J3xHs3MnIgJ0LGROZVw/viewform?embedded=true"
-          title="DowntimeTruth beta application form"
-          loading="lazy"
-        >
-          Loading...
-        </iframe>
-      </div>
-    </section>
-
-    <footer class="footer reveal" style="--delay: 0.58s;">
-      <span>&copy; 2026 DowntimeTruth</span>
-      <span>Stop making excuses.</span>
-    </footer>
-  </main>
+  <div class="footer">
+    &copy; 2026 DOWNTIMETRUTH &bull; STOP MAKING EXCUSES.
+  </div>
 </body>
 </html>
